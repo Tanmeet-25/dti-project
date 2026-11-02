@@ -16,6 +16,8 @@
 <style>
 :root{
   color-scheme: dark;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   --ink:#0c1413; --panel:#121b1a; --panel-2:#17211f; --panel-3:#1d2927;
   --line:#22302d; --grid:#1e2a28; --axis:#2f403c;
   --fg:#e8efec; --fg-dim:#a9b9b4; --fg-mute:#728480;
@@ -35,7 +37,7 @@ body{background:var(--ink);color:var(--fg);font-family:var(--body);
 section{border-top:1px solid var(--line)}
 section>.rail{padding-block:clamp(36px,5vw,72px)}
 h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
-h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:700;letter-spacing:-.025em}
+h1{font-size:clamp(1.9rem,5vw,3.4rem);font-weight:700;letter-spacing:-.025em}
 h2{font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:-.02em}
 h3{font-size:1.15rem;font-weight:600}
 p{margin:0 0 1em}
@@ -48,22 +50,40 @@ a{color:var(--signal);text-decoration:none}
 a:hover{text-decoration:underline}
 :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:3px}
 
-/* Sticky Nav */
-.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;
-  background:rgba(12,20,19,.92);backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav>.rail{display:flex;align-items:center;gap:1.1rem;padding-block:.68rem}
-.nav .brand{font-family:var(--display);font-weight:700;font-size:.92rem;
-  letter-spacing:-.015em;white-space:nowrap;flex:none;color:var(--fg)}
-.nav .links{display:flex;gap:1.05rem;overflow-x:auto;scrollbar-width:none;
-  margin-left:auto;min-width:0}
-.nav .links::-webkit-scrollbar{display:none}
-.nav a{font-family:var(--mono);font-size:.71rem;letter-spacing:.05em;color:var(--fg-mute);
-  text-decoration:none;white-space:nowrap;padding:.22rem 0;
-  border-bottom:1px solid transparent;transition:color .15s,border-color .15s}
-.nav a:hover{color:var(--fg)}
-.nav a.on{color:var(--signal);border-bottom-color:var(--signal);font-weight:600}
-@media(max-width:620px){.nav .brand{display:none}.nav .links{margin-left:0}}
+/* ---- app shell: fixed left rail ---- */
+.shell{display:grid;grid-template-columns:238px minmax(0,1fr);align-items:start}
+.side{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;
+  height:100svh;overflow-y:auto;background:var(--panel);
+  border-right:1px solid var(--line);display:flex;flex-direction:column;
+  padding-block:1.15rem;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:12px}
+.side .brand{font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:-.015em;
+  padding:.2rem .7rem 1.15rem;color:var(--fg)}
+.side .brand small{display:block;font-family:var(--mono);font-size:.6rem;font-weight:400;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--fg-mute);margin-top:.35rem}
+.side nav{display:flex;flex-direction:column;gap:1px}
+.side a{display:block;font-family:var(--mono);font-size:.76rem;letter-spacing:.02em;
+  color:var(--fg-dim);text-decoration:none;padding:.5rem .7rem;border-radius:3px;
+  border-left:2px solid transparent;white-space:nowrap;
+  transition:color .14s,background .14s,border-color .14s}
+.side a:hover{color:var(--fg);background:var(--panel-2);text-decoration:none}
+.side a.on{color:var(--signal);background:var(--panel-2);border-left-color:var(--signal)}
+.side .sep{height:1px;background:var(--line);margin:.85rem .7rem}
+.side .out{color:var(--fg-mute)}
+.side .out::after{content:" \2197";color:var(--fg-mute)}
+.view{border-top:none}
+.view>.rail{padding-block:clamp(40px,6vw,76px)}
+.main{min-width:0}
+@media(max-width:860px){
+  .shell{grid-template-columns:100%}
+  .side{height:auto;flex-direction:row;align-items:center;gap:.25rem;overflow-x:auto;
+    overflow-y:hidden;border-right:none;border-bottom:1px solid var(--line);
+    padding-block:.5rem;scrollbar-width:none}
+  .side::-webkit-scrollbar{display:none}
+  .side .brand,.side .sep{display:none}
+  .side nav{flex-direction:row;gap:.3rem}
+  .side a{border-left:none;border-bottom:2px solid transparent;border-radius:0;padding:.42rem .55rem}
+  .side a.on{border-left-color:transparent;border-bottom-color:var(--signal);background:transparent}
+}
 
 /* Hero Header */
 .hero{border-top:none;background:
@@ -76,7 +96,7 @@ a:hover{text-decoration:underline}
 /* Status / Alert Bar */
 .status-bar{margin-top:1.5rem;padding:.9rem 1.1rem;border-radius:4px;
   background:var(--panel-2);border:1px solid var(--line);font-family:var(--mono);
-  font-size:.8rem;display:flex;align-items:center;gap:.75rem}
+  font-size:.8rem;display:flex;align-items:center;gap:.75rem;word-break:break-word}
 .status-dot{width:10px;height:10px;border-radius:50%;background:var(--warn);flex:none}
 .status-dot.ready{background:var(--good)}
 .status-dot.error{background:var(--crit)}
@@ -85,11 +105,11 @@ a:hover{text-decoration:underline}
 .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
 @media(max-width:760px){.app-grid{grid-template-columns:1fr}}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;
-  padding:1.3rem 1.4rem}
+  padding:1.3rem 1.4rem;min-width:0;word-break:break-word}
 .field{margin-bottom:1.2rem}
 .field label{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;
   text-transform:uppercase;color:var(--fg-dim);margin-bottom:.5rem;font-weight:600}
-input[type=text],textarea,select{width:100%;font-family:var(--mono);font-size:.85rem;
+input[type=text],textarea,select{width:100%;max-width:100%;font-family:var(--mono);font-size:.85rem;
   background:var(--panel-2);color:var(--fg);border:1px solid var(--line);border-radius:4px;
   padding:.65rem .8rem;transition:border-color .15s}
 input[type=text]:focus,textarea:focus,select:focus{border-color:var(--signal);outline:none}
@@ -104,14 +124,15 @@ textarea{resize:vertical;min-height:90px;line-height:1.45}
 
 /* Target card */
 .target-card{background:var(--panel-2);border:1px solid var(--line);border-radius:4px;
-  padding:.85rem 1rem;font-family:var(--mono);font-size:.75rem;margin-top:.6rem;line-height:1.6}
+  padding:.85rem 1rem;font-family:var(--mono);font-size:.75rem;margin-top:.6rem;line-height:1.6;
+  min-width:0;word-break:break-word}
 .target-card .name{font-family:var(--display);font-size:.95rem;font-weight:600;color:var(--fg)}
 .target-card .meta{color:var(--fg-mute);margin-top:.2rem}
 
 /* Output Cards */
 .results-pane{margin-top:2.5rem;border-top:1px solid var(--line);padding-top:2rem}
 .metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1rem;margin-bottom:1.5rem}
-.mcard{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1.2rem}
+.mcard{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1.2rem;min-width:0;word-break:break-word}
 .mcard .k{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
   color:var(--fg-mute);display:block;margin-bottom:.4rem}
 .mcard .v{font-family:var(--display);font-size:2.2rem;font-weight:700;line-height:1;display:block}
@@ -119,7 +140,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.45}
 
 /* Regimes & Honest Reporting Callout */
 .callout{border-left:4px solid var(--signal);background:var(--panel);padding:1.2rem 1.4rem;
-  border-radius:0 4px 4px 0;margin:1.5rem 0}
+  border-radius:0 4px 4px 0;margin:1.5rem 0;min-width:0;word-break:break-word}
 .callout.warn{border-left-color:var(--warn)}
 .callout.crit{border-left-color:var(--crit)}
 .callout h4{font-family:var(--display);font-size:1.1rem;margin-bottom:.6rem;color:var(--fg)}
@@ -146,18 +167,24 @@ footer .dis{font-size:.82rem;color:var(--fg-mute);max-width:48ch}
 </head>
 <body>
 
-<nav class="nav" aria-label="Sections"><div class="rail">
-  <span class="brand">DTI&nbsp;Benchmark</span>
-  <div class="links">
-    <a href="index.html">Overview</a>
-    <a href="index.html#experiment">Four splits</a>
-    <a href="index.html#features">What it uses</a>
-    <a href="index.html#domain">Domain</a>
-    <a href="index.html#method">Method</a>
-    <a href="predict.html" class="on">Predict</a>
-  </div>
-</div></nav>
+<div class="shell">
+<aside class="side">
+  <div class="brand">DTI Benchmark<small>Pinnacle Project</small></div>
+  <nav aria-label="Sections">
+    <a href="index.html#overview" data-view="overview">Overview</a>
+    <a href="index.html#problem" data-view="problem">The problem</a>
+    <a href="index.html#experiment" data-view="experiment">Four splits</a>
+    <a href="index.html#features" data-view="features">What it uses</a>
+    <a href="index.html#domain" data-view="domain">Applicability</a>
+    <a href="index.html#molecules" data-view="molecules">Molecules</a>
+    <a href="index.html#method" data-view="method">Method</a>
+    <a href="index.html#limits" data-view="limits">Limitations</a>
+    <span class="sep"></span>
+    <a class="on" href="predict.html">Run the model</a>
+  </nav>
+</aside>
 
+<main class="main">
 <section class="hero"><div class="rail">
   <div class="kicker">Client-Side WASM Inference · Zero Server Calls</div>
   <h1>Predict Drug–Target Interaction</h1>
@@ -267,7 +294,7 @@ footer .dis{font-size:.82rem;color:var(--fg-mute);max-width:48ch}
         <strong>neural network’s measured ROC-AUC</strong> across our benchmark splits, never the Random Forest’s:
       </p>
 
-      <div style="overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin-top:.8rem">
+      <div style="overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin-top:.8rem;max-width:100%">
       <table class="rtable" style="margin-top:0">
         <thead>
           <tr>
@@ -336,16 +363,18 @@ footer .dis{font-size:.82rem;color:var(--fg-mute);max-width:48ch}
       <summary style="font-family:var(--mono);font-size:.8rem;color:var(--signal);font-weight:600">
         Inspect Input Tensor &amp; Technical Diagnostics
       </summary>
-      <div style="font-family:var(--mono);font-size:.76rem;color:var(--fg-dim);margin-top:1rem;line-height:1.7">
-        <div><strong>Canonical SMILES:</strong> <code id="diag-smiles">—</code></div>
+      <div style="font-family:var(--mono);font-size:.76rem;color:var(--fg-dim);margin-top:1rem;line-height:1.7;word-break:break-word">
+        <div><strong>Canonical SMILES:</strong> <code id="diag-smiles" style="word-break:break-all">—</code></div>
         <div><strong>ECFP4 On-Bits:</strong> <span id="diag-onbits">—</span> / 2048</div>
         <div><strong>Feature Vector Structure:</strong> 2,468 float32 values [Drug Bits 0..2047 | Target Composition 2048..2467]</div>
-        <div><strong>Logit to Probability:</strong> <code>1 / (1 + exp(-z))</code> = <span id="diag-prob-math">—</span></div>
+        <div><strong>Logit to Probability:</strong> <code style="word-break:break-all">1 / (1 + exp(-z))</code> = <span id="diag-prob-math" style="word-break:break-all">—</span></div>
         <div><strong>Engine:</strong> ONNX Runtime Web v1.21.0 (WASM) &middot; RDKit.js v2026.09.1 (WASM)</div>
       </div>
     </details>
   </div>
 </div></section>
+</main>
+</div>
 
 <footer><div class="rail">
   <div class="who">
