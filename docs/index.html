@@ -194,46 +194,64 @@ input[type=range]{flex:1 1 220px;min-width:0;accent-color:var(--signal);height:2
 .bin .bk{font-family:var(--mono);font-size:.62rem;color:var(--fg-mute);display:block}
 .bin .bv{font-family:var(--mono);font-size:.84rem;color:var(--fg);display:block;margin-top:.2rem}
 
-/* ---- sticky nav ---- */
-html{scroll-behavior:smooth}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
-  z-index:30;background:rgba(12,20,19,.94)}
-.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;
-  background:rgba(12,20,19,.88);backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav>.rail{display:flex;align-items:center;gap:1.1rem;padding-block:.68rem}
-.nav .brand{font-family:var(--display);font-weight:700;font-size:.92rem;
-  letter-spacing:-.015em;white-space:nowrap;flex:none}
-.nav .links{display:flex;gap:1.05rem;overflow-x:auto;scrollbar-width:none;
-  margin-left:auto;min-width:0}
-.nav .links::-webkit-scrollbar{display:none}
-.nav a{font-family:var(--mono);font-size:.71rem;letter-spacing:.05em;color:var(--fg-mute);
-  text-decoration:none;white-space:nowrap;padding:.22rem 0;
-  border-bottom:1px solid transparent;transition:color .15s,border-color .15s}
-.nav a:hover{color:var(--fg)}
-.nav a.on{color:var(--signal);border-bottom-color:var(--signal)}
-section{scroll-margin-top:78px}
-@media(max-width:620px){.nav .brand{display:none}.nav .links{margin-left:0}}
+/* ---- app shell: fixed left rail, one view at a time ---- */
+.shell{display:grid;grid-template-columns:238px minmax(0,1fr);align-items:start}
+.side{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;
+  height:100svh;overflow-y:auto;background:var(--panel);
+  border-right:1px solid var(--line);display:flex;flex-direction:column;
+  padding-block:1.15rem;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:12px}
+.side .brand{font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:-.015em;
+  padding:.2rem .7rem 1.15rem;color:var(--fg)}
+.side .brand small{display:block;font-family:var(--mono);font-size:.6rem;font-weight:400;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--fg-mute);margin-top:.35rem}
+.side nav{display:flex;flex-direction:column;gap:1px}
+.side a{display:block;font-family:var(--mono);font-size:.76rem;letter-spacing:.02em;
+  color:var(--fg-dim);text-decoration:none;padding:.5rem .7rem;border-radius:3px;
+  border-left:2px solid transparent;white-space:nowrap;
+  transition:color .14s,background .14s,border-color .14s}
+.side a:hover{color:var(--fg);background:var(--panel-2)}
+.side a.on{color:var(--signal);background:var(--panel-2);border-left-color:var(--signal)}
+.side .sep{height:1px;background:var(--line);margin:.85rem .7rem}
+.side .out{color:var(--fg-mute)}
+.side .out::after{content:" \2197";color:var(--fg-mute)}
+.view{border-top:none}
+.view>.rail{padding-block:clamp(40px,6vw,76px)}
+.main{min-width:0}
+@media(max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .side{height:auto;flex-direction:row;align-items:center;gap:.25rem;overflow-x:auto;
+    overflow-y:hidden;border-right:none;border-bottom:1px solid var(--line);
+    padding-block:.5rem;scrollbar-width:none}
+  .side::-webkit-scrollbar{display:none}
+  .side .brand,.side .sep{display:none}
+  .side nav{flex-direction:row;gap:.3rem}
+  .side a{border-left:none;border-bottom:2px solid transparent;border-radius:0;padding:.42rem .55rem}
+  .side a.on{border-left-color:transparent;border-bottom-color:var(--signal);background:transparent}
+}
 
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<nav class="nav" aria-label="Sections"><div class="rail">
-  <span class="brand">DTI&nbsp;Benchmark</span>
-  <div class="links">
-    <a href="#problem">Problem</a>
-    <a href="#experiment">Four splits</a>
-    <a href="#features">What it uses</a>
-    <a href="#domain">Domain</a>
-    <a href="#molecules">Molecules</a>
-    <a href="#method">Method</a>
-    <a href="#limits">Limits</a>
-    <a href="predict.html" style="color:var(--signal);font-weight:600">Predict</a>
-  </div>
-</div></nav>
-<section class="hero"><div class="rail">
+<div class="shell">
+<aside class="side">
+  <div class="brand">DTI Benchmark<small>Pinnacle Project</small></div>
+  <nav aria-label="Sections">
+    <a href="#overview" data-view="overview">Overview</a>
+    <a href="#problem" data-view="problem">The problem</a>
+    <a href="#experiment" data-view="experiment">Four splits</a>
+    <a href="#features" data-view="features">What it uses</a>
+    <a href="#domain" data-view="domain">Applicability</a>
+    <a href="#molecules" data-view="molecules">Molecules</a>
+    <a href="#method" data-view="method">Method</a>
+    <a href="#limits" data-view="limits">Limitations</a>
+    <span class="sep"></span>
+    <a class="out" href="predict.html">Run the model</a>
+  </nav>
+</aside>
+<main class="main">
+<section class="hero view" id="overview"><div class="rail">
   <div class="kicker">Pinnacle Project · Cheminformatics &amp; Machine Learning</div>
   <h1>A model that scores 0.98 and knows almost nothing</h1>
   <p class="lede">We trained drug&ndash;target interaction models on 289,282 measured
@@ -253,7 +271,7 @@ section{scroll-margin-top:78px}
   </div>
 </div></section>
 
-<section id="problem"><div class="rail">
+<section class="view" id="problem" hidden><div class="rail">
   <div class="eyebrow">The problem</div>
   <div class="grid2" style="align-items:start;gap:2rem">
     <div class="prose">
@@ -284,7 +302,7 @@ section{scroll-margin-top:78px}
   rate, never looking at the compound, reaches 0.848 ROC-AUC on the random split.</div>
 </div></section>
 
-<section id="experiment"><div class="rail">
+<section class="view" id="experiment" hidden><div class="rail">
   <div class="eyebrow">The experiment</div>
   <h2>One model, four splits</h2>
   <p class="lede" style="margin-top:.9rem">Features, hyperparameters and training-set
@@ -309,7 +327,7 @@ section{scroll-margin-top:78px}
   </div>
 </div></section>
 
-<section id="features"><div class="rail">
+<section class="view" id="features" hidden><div class="rail">
   <div class="eyebrow">What the model actually uses</div>
   <div class="grid2" style="gap:2rem;align-items:start">
     <div class="prose">
@@ -334,7 +352,7 @@ section{scroll-margin-top:78px}
   </div>
 </div></section>
 
-<section id="domain"><div class="rail">
+<section class="view" id="domain" hidden><div class="rail">
   <div class="eyebrow">Applicability domain</div>
   <h2>Accuracy tracks similarity to the training set</h2>
   <p class="lede" style="margin-top:.9rem">Binning every test pair by how close its
@@ -382,7 +400,7 @@ section{scroll-margin-top:78px}
   not noise. We report it unresolved rather than drop it.</div>
 </div></section>
 
-<section id="molecules"><div class="rail">
+<section class="view" id="molecules" hidden><div class="rail">
   <div class="eyebrow">Inspect a compound</div>
   <h2>Where a molecule sits in that range</h2>
   <p class="lede" style="margin-top:.9rem">Six compounds spanning the similarity
@@ -413,7 +431,7 @@ section{scroll-margin-top:78px}
   </div>
 </div></section>
 
-<section id="method"><div class="rail">
+<section class="view" id="method" hidden><div class="rail">
   <div class="eyebrow">Method</div>
   <h2>How the data was built</h2>
   <div class="grid2" style="gap:2rem;align-items:start;margin-top:1.4rem">
@@ -459,7 +477,7 @@ section{scroll-margin-top:78px}
   any difference under about 0.04 as unproven.</div>
 </div></section>
 
-<section id="limits"><div class="rail">
+<section class="view" id="limits" hidden><div class="rail">
   <div class="eyebrow">Limitations</div>
   <h2>What this does not show</h2>
   <ul class="clean" style="margin-top:1.4rem;max-width:72ch">
@@ -481,6 +499,8 @@ section{scroll-margin-top:78px}
   </ul>
 </div></section>
 
+</main>
+</div>
 <footer><div class="rail">
   <div class="who">Anuj Seniwal &nbsp;·&nbsp; Jashmann Singh<br>
   Vardaan Makwana &nbsp;·&nbsp; Yash Sheth<br>
@@ -518,10 +538,10 @@ const REGIMES = [
 const MODELS = [
   {k:'Dummy',            label:'Dummy',                 v:[0.500,0.500,0.500,0.500], muted:true},
   {k:'NearestProtein',   label:'Nearest protein',        v:[0.526,0.528,0.479,0.509], muted:true},
-  {k:'DrugOnly',         label:'Drug-only lookup',       v:[0.800,0.500,0.784,0.500], muted:true},
-  {k:'ProteinOnly',      label:'Protein-only lookup',    v:[0.848,0.842,0.500,0.500], muted:true},
-  {k:'RFprot',           label:'RF · protein features',  v:[0.853,0.847,0.638,0.618], muted:true},
-  {k:'RFdrug',           label:'RF · drug features',     v:[0.955,0.881,0.866,0.741], muted:false},
+  {k:'DrugOnly',         label:'Drug lookup',       v:[0.800,0.500,0.784,0.500], muted:true},
+  {k:'ProteinOnly',      label:'Protein lookup',    v:[0.848,0.842,0.500,0.500], muted:true},
+  {k:'RFprot',           label:'RF protein-only',  v:[0.853,0.847,0.638,0.618], muted:true},
+  {k:'RFdrug',           label:'RF drug-only',     v:[0.955,0.881,0.866,0.741], muted:false},
   {k:'RF',               label:'Random Forest',          v:[0.984,0.982,0.745,0.690], muted:false},
   {k:'MLP',              label:'Neural network',         v:[0.964,0.899,0.851,0.751], muted:false}
 ];
@@ -552,7 +572,7 @@ function hideTip(){tip.hidden=true;}
 function drawRegimeChart(ri){
   const host=document.getElementById('regimeChart');host.textContent='';
   const rows=MODELS.slice().sort((a,b)=>a.v[ri]-b.v[ri]);
-  const padL=132,padR=48,padT=16,rowH=30,padB=34;
+  const padL=152,padR=50,padT=14,rowH=30,padB=34;
   const W=560,H=padT+rows.length*rowH+padB, plotW=W-padL-padR;
   const x=v=>padL+((v-0.5)/0.5)*plotW;
   const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,width:'100%',role:'img',
@@ -565,8 +585,6 @@ function drawRegimeChart(ri){
   });
   svg.appendChild(el('line',{x1:x(0.5),x2:x(0.5),y1:padT,y2:padT+rows.length*rowH,
     stroke:'var(--axis)','stroke-width':1,'stroke-dasharray':'3 3'}));
-  const ch=el('text',{x:x(0.5)+5,y:padT+10,fill:'var(--fg-mute)','font-size':9});
-  ch.textContent='chance';svg.appendChild(ch);
   rows.forEach((m,i)=>{
     const cy=padT+i*rowH+rowH/2, v=m.v[ri];
     const nm=el('text',{x:padL-12,y:cy+4,fill:m.muted?'var(--fg-mute)':'var(--fg)',
@@ -690,7 +708,7 @@ function renderRegime(i){
     `<span><i class="swatch" style="background:${r.color}"></i>Model trained and tested under ${r.short.toLowerCase()}</span>`+
     `<span><i class="swatch" style="background:var(--fg-mute)"></i>Baseline, no learning</span>`;
   document.getElementById('regimeCap').textContent=
-    `ROC-AUC on the held-out test set of split ${i+1}. 150,000 training pairs per split, seed 42.`;
+    `ROC-AUC on the held-out test set of split ${i+1}. The dashed line marks chance (0.500). 150,000 training pairs per split, seed 42.`;
   const v=document.getElementById('regimeVerdict');
   v.className='verdict v-'+r.verdict;
   v.innerHTML=`<b>${r.vb}</b> ${r.vt}`;
@@ -768,51 +786,20 @@ document.getElementById('spinBtn').addEventListener('click',e=>{
 });
 
 
-/* ---------- nav active state ---------- */
-(function(){
-  const links=[...document.querySelectorAll('.nav a')];
-  const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
-  const secs=[...map.keys()].map(id=>document.getElementById(id)).filter(Boolean);
-  if(!('IntersectionObserver' in window)||!secs.length)return;
-  const io=new IntersectionObserver(es=>{
-    es.forEach(e=>{
-      const a=map.get(e.target.id); if(!a)return;
-      if(e.isIntersecting){links.forEach(l=>l.classList.remove('on'));a.classList.add('on');}
-    });
-  },{rootMargin:'-78px 0px -62% 0px',threshold:0});
-  secs.forEach(sec=>io.observe(sec));
-})();
-
-
-/* ---------- applicability-domain cut-off ---------- */
-(function(){
-  const CUTS=[{lab:'none',min:0},{lab:'0.4',min:1},{lab:'0.6',min:2},{lab:'0.8',min:3}];
-  const bins=SIM1.bins, n=SIM1.n, auc=SIM1.series[0].v;
-  const total=n.reduce((a,b)=>a+b,0);
-  const range=document.getElementById('cut');
-  const out=document.getElementById('cutOut');
-  const strip=document.getElementById('binStrip');
-  function render(){
-    const k=+range.value, from=CUTS[k].min;
-    document.getElementById('cutval').textContent=CUTS[k].lab;
-    const kept=n.slice(from).reduce((a,b)=>a+b,0);
-    const dropped=total-kept;
-    const worst=Math.min(...auc.slice(from));
-    const worstBin=bins[from];
-    out.innerHTML=[
-      ['Pairs scored',kept.toLocaleString()+' of '+total.toLocaleString()],
-      ['Refused as out of domain',dropped?dropped.toLocaleString()+' ('+(dropped/total*100).toFixed(1)+'%)':'none'],
-      ['Weakest band kept',worstBin],
-      ['Its measured ROC-AUC',worst.toFixed(3)]
-    ].map(([k2,v])=>`<div class="prop"><span class="k">${k2}</span><span class="v">${v}</span></div>`).join('');
-    strip.innerHTML=bins.map((b,i)=>
-      `<div class="bin ${i<from?'out':'in'}"><span class="bk">${b}</span>`+
-      `<span class="bv">${auc[i].toFixed(3)}</span>`+
-      `<span class="bk">${n[i].toLocaleString()} pairs</span></div>`).join('');
-  }
-  range.addEventListener('input',render);
-  render();
-})();
+/* ---------- view routing ---------- */
+const VIEW_IDS=["overview", "problem", "experiment", "features", "domain", "molecules", "method", "limits"];
+function showView(id,push){
+  if(!VIEW_IDS.includes(id))id=VIEW_IDS[0];
+  VIEW_IDS.forEach(v=>{const n=document.getElementById(v);if(n)n.hidden=(v!==id);});
+  document.querySelectorAll('.side a[data-view]').forEach(a=>
+    a.classList.toggle('on',a.dataset.view===id));
+  if(push&&location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);
+  window.scrollTo(0,0);
+  if(id==='molecules'&&viewer){try{viewer.resize();viewer.render();}catch(e){}}
+}
+document.querySelectorAll('.side a[data-view]').forEach(a=>
+  a.addEventListener('click',e=>{e.preventDefault();showView(a.dataset.view,true);}));
+window.addEventListener('hashchange',()=>showView(location.hash.slice(1),false));
 
 /* ---------- boot ---------- */
 renderRegime(0);
@@ -820,6 +807,7 @@ drawAblation();
 drawSim('simChart1','simLegend1',SIM1);
 drawSim('simChart2','simLegend2',SIM2);
 renderMol(0);
+showView(location.hash.slice(1)||'overview',false);
 </script>
 </body>
 </html>
