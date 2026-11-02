@@ -1,0 +1,40 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Bytecode & caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Large raw datasets (e.g. BindingDB)
+*.tsv
+*.csv
+!sample_*.csv
+!sample_*.tsv
+
+# Distribution / builds
+build/
+dist/
+*.egg-info/
+
+# Precomputed features & caches
+features/
+*.npy
+*.npz
+
+# Splits
+splits/
+
+# Models & prediction caches
+*.joblib
+results/preds/
+
+
+
