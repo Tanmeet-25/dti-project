@@ -1,0 +1,21 @@
+drug_name,target_name,true_label,predicted_probability,max_drug_similarity
+CHEMBL3902156,Heat shock protein HSP 90-alpha/90-beta,1,0.195,0.3718
+CHEMBL4210040,Heat shock protein HSP 90-alpha/90-beta,1,0.2,0.3816
+CHEMBL1984524,Amine oxidase [flavin-containing] B,1,0.21,0.4091
+CHEMBL4203436,Heat shock protein HSP 90-alpha/90-beta,1,0.21,0.358
+"US11896597, Compound Neratinib",eIF-2-alpha kinase GCN2,1,0.23,0.75
+"US11447505, Example E219",Serine/threonine-protein kinase MRCK beta,1,0.23,0.88
+L-Glutamate,Metabotropic glutamate receptor 2,1,0.23,0.5
+CHEMBL594844,Serine/threonine-protein kinase mTOR,1,0.24,0.68
+"US11447505, Example E223",Serine/threonine-protein kinase MRCK beta,1,0.245,0.913
+"US11447505, Example E26",Serine/threonine-protein kinase MRCK beta,1,0.245,0.6531
+"US10285989, Example 12","cGMP-dependent 3',5'-cyclic phosphodiesterase",1,0.25,0.4483
+CHEMBL434338,Metabotropic glutamate receptor 2,1,0.25,0.2955
+CHEMBL4632412,"Fatty acid-binding protein, adipocyte",1,0.2533,0.675
+CHEMBL24828,Ephrin type-A receptor 7,1,0.255,0.5
+"US10358435, Example 25","cGMP-dependent 3',5'-cyclic phosphodiesterase",1,0.255,0.35
+Safinamide,Amine oxidase [flavin-containing] B,1,0.255,1.0
+A-674563,Citron Rho-interacting kinase,1,0.255,0.807
+"US11896597, Compound Neratinib",Receptor tyrosine-protein kinase erbB-3,1,0.255,0.75
+"US11447505, Example E103",Serine/threonine-protein kinase MRCK beta,1,0.255,0.6207
+CHEMBL4461815,Serine/threonine-protein kinase mTOR,1,0.26,0.8333

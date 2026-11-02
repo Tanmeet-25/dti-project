@@ -1,0 +1,9 @@
+Model,Split 1 ROC-AUC,Split 4 ROC-AUC,Excess AUC Split 1,Excess AUC Split 4,Retention Ratio,Performance Lost (%)
+Dummy,0.5,0.5,0.0,0.0,0.0,100.0
+Protein-Only,0.8477,0.5,0.3477,0.0,0.0,100.0
+Drug-Only,0.7995,0.5,0.2995,0.0,0.0,100.0
+Nearest-Protein,0.5259,0.5092,0.0259,0.0092,0.3565,64.35
+RF drug-features-only,0.9545,0.7406,0.4545,0.2406,0.5295,47.05
+RF protein-features-only,0.8528,0.6183,0.3528,0.1183,0.3352,66.48
+Random Forest,0.9842,0.6903,0.4842,0.1903,0.393,60.7
+PyTorch MLP,0.9641,0.7512,0.4641,0.2512,0.5413,45.87
