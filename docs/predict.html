@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="In-browser client-side drug-target interaction prediction using WebAssembly ONNX Runtime and RDKit.js.">
+<meta name="theme-color" content="#0c1413">
+<title>Predict Interaction · DTI Benchmark</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Spectral:ital,wght@0,300;0,400;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<!-- Pinned CDN Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/ort.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rdkit/rdkit@2026.9.1/dist/RDKit_minimal.js"></script>
+
+<style>
+:root{
+  color-scheme: dark;
+  --ink:#0c1413; --panel:#121b1a; --panel-2:#17211f; --panel-3:#1d2927;
+  --line:#22302d; --grid:#1e2a28; --axis:#2f403c;
+  --fg:#e8efec; --fg-dim:#a9b9b4; --fg-mute:#728480;
+  --signal:#7fd4c9;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --body:'Spectral',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--ink);color:var(--fg);font-family:var(--body);
+  font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;margin:0;overflow-x:hidden}
+.rail{max-width:1080px;margin-inline:auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{border-top:1px solid var(--line)}
+section>.rail{padding-block:clamp(36px,5vw,72px)}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:700;letter-spacing:-.025em}
+h2{font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:-.02em}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0 0 1em}
+.lede{font-size:clamp(1.02rem,1.9vw,1.2rem);color:var(--fg-dim);max-width:65ch}
+.eyebrow{font-family:var(--mono);font-size:.69rem;font-weight:600;
+  letter-spacing:.17em;text-transform:uppercase;color:var(--signal);
+  display:flex;align-items:center;gap:.65rem;margin-bottom:1.1rem}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+a{color:var(--signal);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:3px}
+
+/* Sticky Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;
+  background:rgba(12,20,19,.92);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav>.rail{display:flex;align-items:center;gap:1.1rem;padding-block:.68rem}
+.nav .brand{font-family:var(--display);font-weight:700;font-size:.92rem;
+  letter-spacing:-.015em;white-space:nowrap;flex:none;color:var(--fg)}
+.nav .links{display:flex;gap:1.05rem;overflow-x:auto;scrollbar-width:none;
+  margin-left:auto;min-width:0}
+.nav .links::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--mono);font-size:.71rem;letter-spacing:.05em;color:var(--fg-mute);
+  text-decoration:none;white-space:nowrap;padding:.22rem 0;
+  border-bottom:1px solid transparent;transition:color .15s,border-color .15s}
+.nav a:hover{color:var(--fg)}
+.nav a.on{color:var(--signal);border-bottom-color:var(--signal);font-weight:600}
+@media(max-width:620px){.nav .brand{display:none}.nav .links{margin-left:0}}
+
+/* Hero Header */
+.hero{border-top:none;background:
+  radial-gradient(1100px 440px at 14% -12%,rgba(127,212,201,.11),transparent 62%),
+  radial-gradient(760px 420px at 92% 6%,rgba(57,135,229,.10),transparent 60%)}
+.hero>.rail{padding-block:clamp(40px,7vw,80px)}
+.kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--fg-mute);margin-bottom:1.3rem}
+
+/* Status / Alert Bar */
+.status-bar{margin-top:1.5rem;padding:.9rem 1.1rem;border-radius:4px;
+  background:var(--panel-2);border:1px solid var(--line);font-family:var(--mono);
+  font-size:.8rem;display:flex;align-items:center;gap:.75rem}
+.status-dot{width:10px;height:10px;border-radius:50%;background:var(--warn);flex:none}
+.status-dot.ready{background:var(--good)}
+.status-dot.error{background:var(--crit)}
+
+/* Form / Panel */
+.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+@media(max-width:760px){.app-grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  padding:1.3rem 1.4rem}
+.field{margin-bottom:1.2rem}
+.field label{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--fg-dim);margin-bottom:.5rem;font-weight:600}
+input[type=text],textarea,select{width:100%;font-family:var(--mono);font-size:.85rem;
+  background:var(--panel-2);color:var(--fg);border:1px solid var(--line);border-radius:4px;
+  padding:.65rem .8rem;transition:border-color .15s}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--signal);outline:none}
+textarea{resize:vertical;min-height:90px;line-height:1.45}
+.btn-primary{width:100%;font-family:var(--mono);font-size:.85rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;background:var(--signal);color:var(--ink);
+  border:none;border-radius:4px;padding:.85rem 1.2rem;cursor:pointer;
+  transition:opacity .15s,transform .1s}
+.btn-primary:hover:not(:disabled){opacity:.92}
+.btn-primary:active:not(:disabled){transform:scale(.99)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+
+/* Target card */
+.target-card{background:var(--panel-2);border:1px solid var(--line);border-radius:4px;
+  padding:.85rem 1rem;font-family:var(--mono);font-size:.75rem;margin-top:.6rem;line-height:1.6}
+.target-card .name{font-family:var(--display);font-size:.95rem;font-weight:600;color:var(--fg)}
+.target-card .meta{color:var(--fg-mute);margin-top:.2rem}
+
+/* Output Cards */
+.results-pane{margin-top:2.5rem;border-top:1px solid var(--line);padding-top:2rem}
+.metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1rem;margin-bottom:1.5rem}
+.mcard{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1.2rem}
+.mcard .k{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--fg-mute);display:block;margin-bottom:.4rem}
+.mcard .v{font-family:var(--display);font-size:2.2rem;font-weight:700;line-height:1;display:block}
+.mcard .sub{font-size:.8rem;color:var(--fg-dim);margin-top:.4rem;display:block;font-family:var(--body)}
+
+/* Regimes & Honest Reporting Callout */
+.callout{border-left:4px solid var(--signal);background:var(--panel);padding:1.2rem 1.4rem;
+  border-radius:0 4px 4px 0;margin:1.5rem 0}
+.callout.warn{border-left-color:var(--warn)}
+.callout.crit{border-left-color:var(--crit)}
+.callout h4{font-family:var(--display);font-size:1.1rem;margin-bottom:.6rem;color:var(--fg)}
+.callout p{font-size:.92rem;color:var(--fg-dim);margin-bottom:.6rem;line-height:1.6}
+.callout p:last-child{margin-bottom:0}
+
+/* Regime table */
+.rtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.75rem;margin-top:.8rem}
+.rtable th,.rtable td{padding:.5rem .7rem;border-bottom:1px solid var(--line);text-align:left}
+.rtable th{color:var(--fg-mute);text-transform:uppercase;font-size:.62rem;letter-spacing:.1em}
+.rtable tr.hl td{background:var(--panel-2);color:var(--signal);font-weight:600}
+
+/* Progress bar */
+.progress-wrap{display:none;margin-top:.8rem}
+.progress-bar{height:6px;background:var(--panel-2);border-radius:3px;overflow:hidden}
+.progress-bar-fill{height:100%;width:0;background:var(--signal);transition:width .2s}
+.progress-text{font-family:var(--mono);font-size:.7rem;color:var(--fg-mute);margin-top:.3rem}
+
+footer{border-top:1px solid var(--line);background:var(--panel);margin-top:4rem}
+footer .rail{padding-block:2rem;display:flex;gap:1.3rem;justify-content:space-between;flex-wrap:wrap}
+footer .who{font-family:var(--mono);font-size:.78rem;color:var(--fg-dim);line-height:1.9}
+footer .dis{font-size:.82rem;color:var(--fg-mute);max-width:48ch}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Sections"><div class="rail">
+  <span class="brand">DTI&nbsp;Benchmark</span>
+  <div class="links">
+    <a href="index.html">Overview</a>
+    <a href="index.html#experiment">Four splits</a>
+    <a href="index.html#features">What it uses</a>
+    <a href="index.html#domain">Domain</a>
+    <a href="index.html#method">Method</a>
+    <a href="predict.html" class="on">Predict</a>
+  </div>
+</div></nav>
+
+<section class="hero"><div class="rail">
+  <div class="kicker">Client-Side WASM Inference · Zero Server Calls</div>
+  <h1>Predict Drug–Target Interaction</h1>
+  <p class="lede">
+    Run real-time neural network inference in your browser. Small molecules are canonicalized
+    and converted to 2,048-bit ECFP4 fingerprints via RDKit WebAssembly, combined with 420-dimensional
+    target composition features, and evaluated with ONNX Runtime Web.
+  </p>
+
+  <div id="status-bar" class="status-bar">
+    <span id="status-dot" class="status-dot"></span>
+    <span id="status-text">Initializing RDKit.js and ONNX Runtime Web...</span>
+  </div>
+</div></section>
+
+<section><div class="rail">
+  <div class="app-grid">
+    <!-- Drug Column -->
+    <div class="panel">
+      <div class="eyebrow">1. Small Molecule Compound</div>
+
+      <div class="field">
+        <label for="example-select">Load Representative Molecule</label>
+        <select id="example-select">
+          <option value="Cn1c(=O)c2c(ncn2C)n(C)c1=O">Caffeine — seen chemistry in training (Tanimoto ≈ 1.00)</option>
+          <option value="Cc1ccc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1Nc1nccc(-c2cccnc2)n1">Imatinib — kinase inhibitor scaffold (Tanimoto ≈ 0.78)</option>
+          <option value="CC(=O)Oc1ccccc1C(=O)O">Aspirin — simple salicylate analgesic (Tanimoto ≈ 0.59)</option>
+          <option value="COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCOCC1">Gefitinib — EGFR inhibitor (Tanimoto ≈ 0.51)</option>
+          <option value="OCC12CC3(CO)CC(C1)CC(C2)C3">Cubane diol — rigid cage hydrocarbon (Tanimoto ≈ 0.36)</option>
+          <option value="FC(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)CCO">Perfluorooctanol — fluorinated chain (Tanimoto ≈ 0.21)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="smiles-input">SMILES String</label>
+        <textarea id="smiles-input" placeholder="Enter canonical or valid SMILES (e.g. CC(=O)Oc1ccccc1C(=O)O)">Cn1c(=O)c2c(ncn2C)n(C)c1=O</textarea>
+      </div>
+    </div>
+
+    <!-- Target Column -->
+    <div class="panel">
+      <div class="eyebrow">2. Protein Target</div>
+
+      <div class="field">
+        <label for="target-search">Filter 200 Curated Human Targets</label>
+        <input type="text" id="target-search" placeholder="Type target name or UniProt ID (e.g., ABL1, P00918, kinase)">
+      </div>
+
+      <div class="field">
+        <label for="target-select">Select Target Protein</label>
+        <select id="target-select" size="4" style="height:115px;">
+          <option value="">Loading targets.json...</option>
+        </select>
+      </div>
+
+      <div id="target-preview" class="target-card">
+        <div class="name" id="tp-name">Select a target protein</div>
+        <div class="meta" id="tp-meta">UniProt ID: — · Pairs: — · Training active rate: —</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem">
+    <button id="btn-predict" class="btn-primary" disabled>Initializing WASM engines...</button>
+    <div id="progress-wrap" class="progress-wrap">
+      <div class="progress-bar"><div id="progress-bar-fill" class="progress-bar-fill"></div></div>
+      <div id="progress-text" class="progress-text">Loading reference domain...</div>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div id="results-pane" class="results-pane" style="display:none">
+    <div class="eyebrow">Prediction Output &amp; Reliability Context</div>
+
+    <div class="metric-row">
+      <div class="mcard">
+        <span class="k">Predicted Binding Probability</span>
+        <span class="v" id="prob-val" style="color:var(--signal)">—</span>
+        <span class="sub" id="prob-sub">P(Ki/Kd ≤ 100 nM) via sigmoid(logit)</span>
+      </div>
+
+      <div class="mcard">
+        <span class="k">Raw Logit Output (z)</span>
+        <span class="v" id="logit-val" style="font-size:1.8rem">—</span>
+        <span class="sub">Linear layer output before sigmoid</span>
+      </div>
+
+      <div class="mcard">
+        <span class="k">Closest Training Drug</span>
+        <span class="v" id="tanimoto-val">—</span>
+        <span class="sub" id="tanimoto-sub">ECFP4 max Tanimoto vs 30k sample</span>
+      </div>
+
+      <div class="mcard">
+        <span class="k">Target Training Positive Rate</span>
+        <span class="v" id="target-pos-val">—</span>
+        <span class="sub" id="target-pos-sub">In Split 1 training set</span>
+      </div>
+    </div>
+
+    <!-- Honest Reporting Breakdown -->
+    <div class="callout" id="report-callout">
+      <h4>Honest Reporting &amp; Model Generalization Context</h4>
+      <p>
+        <strong>Deployed Architecture:</strong> This client-side page runs the <strong>PyTorch Deep MLP</strong>
+        (2,468 &rarr; 512 &rarr; 128 &rarr; 1, ReLU, dropout 0.3) exported to ONNX. It quotes exclusively the
+        <strong>neural network’s measured ROC-AUC</strong> across our benchmark splits, never the Random Forest’s:
+      </p>
+
+      <div style="overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin-top:.8rem">
+      <table class="rtable" style="margin-top:0">
+        <thead>
+          <tr>
+            <th>Regime</th>
+            <th>Split Description</th>
+            <th>Neural Net ROC-AUC</th>
+            <th>PR-AUC</th>
+            <th>Generalization Implication</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hl">
+            <td>1. Random Pairs</td>
+            <td>Both drug and target observed during training</td>
+            <td>0.964</td>
+            <td>0.985</td>
+            <td>Optimistic warm-start ceiling (memorisation dominant)</td>
+          </tr>
+          <tr>
+            <td>2. Unseen Drugs</td>
+            <td>Trained target, structurally novel compound</td>
+            <td>0.899</td>
+            <td>0.955</td>
+            <td>Virtual screening setting</td>
+          </tr>
+          <tr>
+            <td>3. Unseen Proteins</td>
+            <td>Trained compound, novel target protein</td>
+            <td>0.851</td>
+            <td>0.924</td>
+            <td>Target profiling setting</td>
+          </tr>
+          <tr>
+            <td>4. Cold-Start</td>
+            <td>Neither drug nor protein present in training</td>
+            <td>0.751</td>
+            <td>0.875</td>
+            <td>True de novo interaction generalisation</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p style="margin-top:1rem">
+        <strong>Target Presence:</strong> <span id="diag-target-status">The chosen target protein appears in the Split 1 training set.</span>
+      </p>
+
+      <p>
+        <strong>Chemical Similarity Context:</strong> Max Tanimoto similarity against the 30,000-drug training reference
+        sample is displayed as structural context. However, <em>we do not claim a calibrated per-band accuracy from it</em>.
+        On Split 2, the neural network’s measured ROC-AUC across similarity bins is non-monotonic
+        (<span class="mono">&lt;0.4: 0.804</span>, <span class="mono">0.4–0.6: 0.823</span>, <span class="mono">0.6–0.8: 0.937</span>,
+        <span class="mono">&gt;0.8: 0.684</span>). This anomaly remains unexplained, so similarity must be regarded as chemical distance,
+        not as a guarantee of model certainty.
+      </p>
+
+      <p>
+        <strong>Operational Scope:</strong> The model was trained strictly to distinguish strong binders
+        (&le; 100 nM) from confirmed weak binders (&ge; 10 &mu;M). Output probabilities serve as ranking hypotheses
+        to prioritize candidates for experimental assay testing, not as physical proof of binding.
+      </p>
+    </div>
+
+    <!-- Diagnostic Details -->
+    <details class="panel" style="margin-top:1rem;cursor:pointer">
+      <summary style="font-family:var(--mono);font-size:.8rem;color:var(--signal);font-weight:600">
+        Inspect Input Tensor &amp; Technical Diagnostics
+      </summary>
+      <div style="font-family:var(--mono);font-size:.76rem;color:var(--fg-dim);margin-top:1rem;line-height:1.7">
+        <div><strong>Canonical SMILES:</strong> <code id="diag-smiles">—</code></div>
+        <div><strong>ECFP4 On-Bits:</strong> <span id="diag-onbits">—</span> / 2048</div>
+        <div><strong>Feature Vector Structure:</strong> 2,468 float32 values [Drug Bits 0..2047 | Target Composition 2048..2467]</div>
+        <div><strong>Logit to Probability:</strong> <code>1 / (1 + exp(-z))</code> = <span id="diag-prob-math">—</span></div>
+        <div><strong>Engine:</strong> ONNX Runtime Web v1.21.0 (WASM) &middot; RDKit.js v2026.09.1 (WASM)</div>
+      </div>
+    </details>
+  </div>
+</div></section>
+
+<footer><div class="rail">
+  <div class="who">
+    Anuj Seniwal · Jashmann Singh · Vardaan Makwana · Yash Sheth<br>
+    Pinnacle Project · Machine Learning &amp; Cheminformatics Benchmark
+  </div>
+  <div class="dis">
+    Predictions are computational hypotheses for laboratory triage, not clinical or physical proof of binding.
+    All calculations execute locally via WebAssembly.
+  </div>
+</div></footer>
+
+<script>
+// -----------------------------------------------------------------------------
+// Pinned CDN Configuration
+// -----------------------------------------------------------------------------
+// Point ONNX Runtime Web wasmPaths explicitly to the matching CDN dist path
+if (typeof ort !== 'undefined' && ort.env && ort.env.wasm) {
+  ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/';
+  ort.env.wasm.numThreads = 1; // standard web compatibility
+}
+
+// Global Application State
+let RDKitModule = null;
+let onnxSession = null;
+let targetsList = [];
+let domainData = null;
+let domainPopcounts = null;
+let isDomainLoading = false;
+
+// Precomputed 256-entry popcount lookup table
+const POPCOUNT_TABLE = new Uint8Array(256);
+for (let i = 0; i < 256; i++) {
+  let c = 0, n = i;
+  while (n > 0) { c += n & 1; n >>= 1; }
+  POPCOUNT_TABLE[i] = c;
+}
+
+function popcount256(bytes) {
+  let s = 0;
+  for (let i = 0; i < 256; i++) s += POPCOUNT_TABLE[bytes[i]];
+  return s;
+}
+
+// Status Helpers
+const statusDot = document.getElementById('status-dot');
+const statusText = document.getElementById('status-text');
+const btnPredict = document.getElementById('btn-predict');
+
+function setStatus(text, type) {
+  statusText.textContent = text;
+  statusDot.className = 'status-dot ' + (type || '');
+}
+
+// -----------------------------------------------------------------------------
+// Initialize Libraries & Data
+// -----------------------------------------------------------------------------
+async function initApp() {
+  let rdkitFailed = false;
+  let modelFailed = false;
+  let targetsFailed = false;
+
+  // 1. RDKit.js
+  try {
+    setStatus("Loading RDKit.js WebAssembly...", "");
+    if (typeof initRDKitModule === 'undefined') {
+      throw new Error("RDKit_minimal.js failed to load from CDN");
+    }
+    RDKitModule = await initRDKitModule();
+  } catch (e) {
+    rdkitFailed = true;
+    console.error("RDKit load error:", e);
+  }
+
+  // 2. ONNX Runtime Web & Model
+  try {
+    setStatus("Loading model.onnx WebAssembly session...", "");
+    if (typeof ort === 'undefined') {
+      throw new Error("onnxruntime-web failed to load from CDN");
+    }
+    onnxSession = await ort.InferenceSession.create('model.onnx');
+  } catch (e) {
+    modelFailed = true;
+    console.error("ONNX load error:", e);
+  }
+
+  // 3. Targets Catalog
+  try {
+    setStatus("Loading targets catalog (targets.json)...", "");
+    const targetsResp = await fetch('targets.json');
+    if (!targetsResp.ok) throw new Error("HTTP " + targetsResp.status + " loading targets.json");
+    targetsList = await targetsResp.json();
+    populateTargets(targetsList);
+  } catch (e) {
+    targetsFailed = true;
+    console.error("Targets load error:", e);
+  }
+
+  if (rdkitFailed || modelFailed || targetsFailed) {
+    const failedItems = [];
+    if (rdkitFailed) failedItems.push("RDKit.js");
+    if (modelFailed) failedItems.push("model.onnx");
+    if (targetsFailed) failedItems.push("targets.json");
+
+    setStatus(`Failed to load: ${failedItems.join(', ')}. Model prediction is disabled, but benchmark documentation remains accessible.`, "error");
+    btnPredict.disabled = true;
+    btnPredict.textContent = "Prediction Unavailable";
+  } else {
+    setStatus("Ready for client-side prediction. Model & WASM initialized.", "ready");
+    btnPredict.disabled = false;
+    btnPredict.textContent = "Predict Interaction";
+  }
+}
+
+// Populate Targets Select
+const targetSelect = document.getElementById('target-select');
+const targetSearch = document.getElementById('target-search');
+const tpName = document.getElementById('tp-name');
+const tpMeta = document.getElementById('tp-meta');
+
+function populateTargets(list) {
+  targetSelect.innerHTML = '';
+  list.forEach((t, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${t.target_name} (${t.uniprot_id || 'no UniProt'}) — ${t.pair_count.toLocaleString()} pairs`;
+    targetSelect.appendChild(opt);
+  });
+  if (list.length > 0) {
+    targetSelect.selectedIndex = 0;
+    updateTargetPreview(list[0]);
+  }
+}
+
+function updateTargetPreview(t) {
+  if (!t) return;
+  tpName.textContent = t.target_name;
+  tpMeta.textContent = `UniProt: ${t.uniprot_id || 'None'} · Measured pairs: ${t.pair_count.toLocaleString()} · Split 1 active rate: ${(t.training_positive_rate * 100).toFixed(1)}%`;
+}
+
+targetSelect.addEventListener('change', () => {
+  const idx = parseInt(targetSelect.value, 10);
+  if (!isNaN(idx) && targetsList[idx]) {
+    updateTargetPreview(targetsList[idx]);
+  }
+});
+
+targetSearch.addEventListener('input', () => {
+  const query = targetSearch.value.trim().toLowerCase();
+  targetSelect.innerHTML = '';
+  let firstMatch = null;
+  targetsList.forEach((t, i) => {
+    const match = t.target_name.toLowerCase().includes(query) || (t.uniprot_id && t.uniprot_id.toLowerCase().includes(query));
+    if (match) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${t.target_name} (${t.uniprot_id || 'no UniProt'}) — ${t.pair_count.toLocaleString()} pairs`;
+      targetSelect.appendChild(opt);
+      if (firstMatch === null) firstMatch = t;
+    }
+  });
+  if (firstMatch) {
+    targetSelect.selectedIndex = 0;
+    updateTargetPreview(firstMatch);
+  }
+});
+
+// Example Molecule Dropdown
+const exampleSelect = document.getElementById('example-select');
+const smilesInput = document.getElementById('smiles-input');
+exampleSelect.addEventListener('change', () => {
+  smilesInput.value = exampleSelect.value;
+});
+
+// -----------------------------------------------------------------------------
+// Lazy Domain Loader & Tanimoto Engine
+// -----------------------------------------------------------------------------
+const progressWrap = document.getElementById('progress-wrap');
+const progressBarFill = document.getElementById('progress-bar-fill');
+const progressText = document.getElementById('progress-text');
+
+async function loadDomainIndex() {
+  if (domainData) return domainData;
+  if (isDomainLoading) return null;
+  isDomainLoading = true;
+
+  progressWrap.style.display = 'block';
+  progressText.textContent = "Fetching 30,000-compound reference domain (domain.json)...";
+  progressBarFill.style.width = '30%';
+
+  try {
+    const resp = await fetch('domain.json');
+    if (!resp.ok) throw new Error("HTTP " + resp.status + " loading domain.json");
+    const b64List = await resp.json();
+
+    const N = b64List.length;
+    progressText.textContent = `Decoding and indexing ${N.toLocaleString()} bit-packed fingerprints...`;
+    progressBarFill.style.width = '70%';
+
+    // Yield to render progress bar
+    await new Promise(r => setTimeout(r, 10));
+
+    domainData = new Uint8Array(N * 256);
+    domainPopcounts = new Uint16Array(N);
+
+    for (let i = 0; i < N; i++) {
+      const binStr = atob(b64List[i]);
+      const offset = i * 256;
+      let pop = 0;
+      for (let j = 0; j < 256; j++) {
+        const byteVal = binStr.charCodeAt(j);
+        domainData[offset + j] = byteVal;
+        pop += POPCOUNT_TABLE[byteVal];
+      }
+      domainPopcounts[i] = pop;
+    }
+
+    progressBarFill.style.width = '100%';
+    progressText.textContent = "Reference domain index ready.";
+    setTimeout(() => { progressWrap.style.display = 'none'; }, 600);
+    isDomainLoading = false;
+    return domainData;
+  } catch (e) {
+    console.warn("Domain loading notice:", e);
+    progressText.textContent = "domain.json could not be loaded; Tanimoto similarity will be unavailable.";
+    progressBarFill.style.background = 'var(--warn)';
+    isDomainLoading = false;
+    return null;
+  }
+}
+
+function computeMaxTanimoto(queryPacked) {
+  if (!domainData || !domainPopcounts) return null;
+  const N = domainPopcounts.length;
+  const qPop = popcount256(queryPacked);
+  if (qPop === 0) return 0.0;
+
+  let maxSim = 0.0;
+  for (let i = 0; i < N; i++) {
+    const offset = i * 256;
+    let inter = 0;
+    for (let j = 0; j < 256; j++) {
+      inter += POPCOUNT_TABLE[queryPacked[j] & domainData[offset + j]];
+    }
+    const union = qPop + domainPopcounts[i] - inter;
+    const sim = union > 0 ? (inter / union) : 0.0;
+    if (sim > maxSim) {
+      maxSim = sim;
+      if (maxSim >= 0.9999) break;
+    }
+  }
+  return maxSim;
+}
+
+// -----------------------------------------------------------------------------
+// Prediction Handler
+// -----------------------------------------------------------------------------
+btnPredict.addEventListener('click', async () => {
+  if (!RDKitModule || !onnxSession) {
+    alert("WASM runtime is still initializing. Please wait.");
+    return;
+  }
+
+  const rawSmiles = smilesInput.value.trim();
+  if (!rawSmiles) {
+    alert("Please provide a valid SMILES string.");
+    return;
+  }
+
+  const selectedIdx = parseInt(targetSelect.value, 10);
+  if (isNaN(selectedIdx) || !targetsList[selectedIdx]) {
+    alert("Please choose a target protein.");
+    return;
+  }
+  const target = targetsList[selectedIdx];
+
+  btnPredict.disabled = true;
+  btnPredict.textContent = "Processing...";
+
+  try {
+    // 1. RDKit parse and canonicalization
+    const mol = RDKitModule.get_mol(rawSmiles);
+    if (!mol) {
+      throw new Error("RDKit was unable to parse that SMILES string. Please check chemical syntax.");
+    }
+
+    const canonicalSmiles = mol.get_smiles();
+
+    // 2. Compute 2,048-bit ECFP4 fingerprint
+    const fpOptions = JSON.stringify({ radius: 2, nBits: 2048 });
+    const packedBytes = mol.get_morgan_fp_as_uint8array(fpOptions);
+    mol.delete(); // Free WASM memory
+
+    if (!packedBytes || packedBytes.length !== 256) {
+      throw new Error("Unexpected fingerprint output format from RDKit.");
+    }
+
+    // Unpack 256 bytes into 2,048 float32 bits (LSB-first order matching Python RDKit)
+    const drugBits = new Float32Array(2048);
+    let onBitIndices = [];
+    for (let b = 0; b < 256; b++) {
+      const byteVal = packedBytes[b];
+      for (let bit = 0; bit < 8; bit++) {
+        const bitVal = (byteVal >> bit) & 1;
+        const idx = b * 8 + bit;
+        drugBits[idx] = bitVal;
+        if (bitVal === 1) onBitIndices.push(idx);
+      }
+    }
+
+    // 3. Assemble 2,468-dim input tensor (Drug first [0..2047], Target second [2048..2467])
+    const inputTensorData = new Float32Array(2468);
+    inputTensorData.set(drugBits, 0);
+    inputTensorData.set(target.features, 2048);
+
+    const inputTensor = new ort.Tensor('float32', inputTensorData, [1, 2468]);
+
+    // 4. Run ONNX Session (output is raw logit z)
+    const inputName = onnxSession.inputNames[0];
+    const feeds = {};
+    feeds[inputName] = inputTensor;
+    const results = await onnxSession.run(feeds);
+    const outputName = onnxSession.outputNames[0];
+    const logit = results[outputName].data[0];
+
+    // 5. Apply Sigmoid to convert raw logit to probability
+    const prob = 1.0 / (1.0 + Math.exp(-logit));
+
+    // 6. Compute Tanimoto similarity (load domain lazily if needed)
+    let maxTanimoto = null;
+    if (!domainData && !isDomainLoading) {
+      loadDomainIndex().then(() => {
+        const sim = computeMaxTanimoto(packedBytes);
+        document.getElementById('tanimoto-val').textContent = sim !== null ? sim.toFixed(2) : "N/A";
+      }).catch(() => {
+        document.getElementById('tanimoto-val').textContent = "N/A";
+      });
+    } else if (domainData) {
+      maxTanimoto = computeMaxTanimoto(packedBytes);
+    } else {
+      maxTanimoto = "N/A";
+    }
+
+    // 7. Update UI Elements
+    document.getElementById('prob-val').textContent = (prob * 100).toFixed(1) + "%";
+    document.getElementById('prob-sub').textContent = `Probability: ${prob.toFixed(4)}`;
+    document.getElementById('logit-val').textContent = logit.toFixed(3);
+    document.getElementById('tanimoto-val').textContent = typeof maxTanimoto === 'number' ? maxTanimoto.toFixed(2) : (maxTanimoto || "Calculating...");
+    document.getElementById('target-pos-val').textContent = (target.training_positive_rate * 100).toFixed(1) + "%";
+    document.getElementById('target-pos-sub').textContent = `Split 1 rate (${target.pair_count.toLocaleString()} pairs)`;
+
+    // Diagnostic fields
+    document.getElementById('diag-smiles').textContent = canonicalSmiles;
+    document.getElementById('diag-onbits').textContent = onBitIndices.length;
+    document.getElementById('diag-prob-math').textContent = `1 / (1 + exp(-(${logit.toFixed(4)}))) = ${prob.toFixed(6)}`;
+    document.getElementById('diag-target-status').textContent =
+      `Target "${target.target_name}" (${target.uniprot_id || 'no UniProt'}) is present in the Split 1 training set with ${target.pair_count.toLocaleString()} total pairs and a ${(target.training_positive_rate * 100).toFixed(1)}% positive label prevalence.`;
+
+    document.getElementById('results-pane').style.display = 'block';
+    document.getElementById('results-pane').scrollIntoView({ behavior: 'smooth' });
+
+  } catch (err) {
+    console.error("Prediction error:", err);
+    alert("Prediction failed: " + err.message);
+  } finally {
+    btnPredict.disabled = false;
+    btnPredict.textContent = "Predict Interaction";
+  }
+});
+
+// Kick off initialization on page load
+window.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>

@@ -1,0 +1,852 @@
+{
+  "four_regime_table": [
+    {
+      "Split": "random",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7193079489085158,
+      "PR-AUC 95% CI": "(0.7155733100575556, 0.7230421556596436)",
+      "Train Time (s)": 0.001
+    },
+    {
+      "Split": "random",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.8477034240578316,
+      "ROC-AUC 95% CI": "(0.8441858408616689, 0.8514640242778673)",
+      "PR-AUC": 0.9223770037220368,
+      "PR-AUC 95% CI": "(0.9196769022315943, 0.9251852427450883)",
+      "Train Time (s)": 0.062
+    },
+    {
+      "Split": "random",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.7995103601917131,
+      "ROC-AUC 95% CI": "(0.7956751013981112, 0.8031825687894002)",
+      "PR-AUC": 0.8708746457185413,
+      "PR-AUC 95% CI": "(0.8677707748934783, 0.8740929852138096)",
+      "Train Time (s)": 0.321
+    },
+    {
+      "Split": "random",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.5259250080282889,
+      "ROC-AUC 95% CI": "(0.5212545423683278, 0.5309496654915241)",
+      "PR-AUC": 0.7380793069305399,
+      "PR-AUC 95% CI": "(0.7334457314457323, 0.742910470302723)",
+      "Train Time (s)": 1.83
+    },
+    {
+      "Split": "random",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.9544576593427446,
+      "ROC-AUC 95% CI": "(0.952607286380889, 0.9562094447853514)",
+      "PR-AUC": 0.9802236625137376,
+      "PR-AUC 95% CI": "(0.9789900792527758, 0.9813833936632992)",
+      "Train Time (s)": 38.427
+    },
+    {
+      "Split": "random",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.8528100402083225,
+      "ROC-AUC 95% CI": "(0.849408935136506, 0.856340327595699)",
+      "PR-AUC": 0.928580301017128,
+      "PR-AUC 95% CI": "(0.926193114607914, 0.9309597518374073)",
+      "Train Time (s)": 13.858
+    },
+    {
+      "Split": "random",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.9841977373482392,
+      "ROC-AUC 95% CI": "(0.9833095688141305, 0.9849890314690468)",
+      "PR-AUC": 0.9933089045057152,
+      "PR-AUC 95% CI": "(0.9928272390921957, 0.9937536750946567)",
+      "Train Time (s)": 27.839
+    },
+    {
+      "Split": "random",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.964066455885366,
+      "ROC-AUC 95% CI": "(0.9625721749588656, 0.9654992862509797)",
+      "PR-AUC": 0.984957850967912,
+      "PR-AUC 95% CI": "(0.9841488803714352, 0.985782610010864)",
+      "Train Time (s)": 91.551
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7353314080439529,
+      "PR-AUC 95% CI": "(0.73156300626893, 0.7388369902091991)",
+      "Train Time (s)": 0.001
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.8418781424331439,
+      "ROC-AUC 95% CI": "(0.8380189822006056, 0.8453802639903167)",
+      "PR-AUC": 0.9264282848824852,
+      "PR-AUC 95% CI": "(0.9237902634744525, 0.9288076277808027)",
+      "Train Time (s)": 0.066
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7353314080439529,
+      "PR-AUC 95% CI": "(0.73156300626893, 0.7388369902091991)",
+      "Train Time (s)": 0.304
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.5282215467527516,
+      "ROC-AUC 95% CI": "(0.522946421833237, 0.5334308211108327)",
+      "PR-AUC": 0.7503703437644893,
+      "PR-AUC 95% CI": "(0.7455943427354524, 0.7550658616010569)",
+      "Train Time (s)": 1.849
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.8810760473720248,
+      "ROC-AUC 95% CI": "(0.8774153190843869, 0.8846377440331593)",
+      "PR-AUC": 0.9280170082361214,
+      "PR-AUC 95% CI": "(0.9247059318309349, 0.9314867462886783)",
+      "Train Time (s)": 37.915
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.8468646578994253,
+      "ROC-AUC 95% CI": "(0.8430649763858954, 0.8503522039826177)",
+      "PR-AUC": 0.9311775050352776,
+      "PR-AUC 95% CI": "(0.9288371607539394, 0.9333566141713326)",
+      "Train Time (s)": 13.918
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.9823516177887373,
+      "ROC-AUC 95% CI": "(0.9813305148721205, 0.9833792277051153)",
+      "PR-AUC": 0.992924454584344,
+      "PR-AUC 95% CI": "(0.992393436325003, 0.9934377036785892)",
+      "Train Time (s)": 27.998
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.8991444900482732,
+      "ROC-AUC 95% CI": "(0.8960541545650827, 0.902041690385505)",
+      "PR-AUC": 0.9554895330073816,
+      "PR-AUC 95% CI": "(0.9536518838375302, 0.9571472638733639)",
+      "Train Time (s)": 50.671
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7205973344035853,
+      "PR-AUC 95% CI": "(0.7170341477282229, 0.7245288382748876)",
+      "Train Time (s)": 0.001
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7205973344035853,
+      "PR-AUC 95% CI": "(0.7170341477282229, 0.7245288382748876)",
+      "Train Time (s)": 0.061
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.7843989696390945,
+      "ROC-AUC 95% CI": "(0.780881688920588, 0.7883771963127819)",
+      "PR-AUC": 0.8627916721345983,
+      "PR-AUC 95% CI": "(0.8597576658693598, 0.8662604850435885)",
+      "Train Time (s)": 0.316
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.4791660116574537,
+      "ROC-AUC 95% CI": "(0.4739857553908536, 0.4841743208578492)",
+      "PR-AUC": 0.7111094388856294,
+      "PR-AUC 95% CI": "(0.7063676802884986, 0.7157942940419335)",
+      "Train Time (s)": 1.261
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.8659404565748906,
+      "ROC-AUC 95% CI": "(0.8624276989176164, 0.8696572947513157)",
+      "PR-AUC": 0.9272164904090384,
+      "PR-AUC 95% CI": "(0.924602603733817, 0.9301054155677867)",
+      "Train Time (s)": 38.629
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.6377032817793604,
+      "ROC-AUC 95% CI": "(0.6326392560809513, 0.6430680172576407)",
+      "PR-AUC": 0.7915611275703296,
+      "PR-AUC 95% CI": "(0.7870237906663531, 0.7963359437059361)",
+      "Train Time (s)": 13.26
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.7452621575909304,
+      "ROC-AUC 95% CI": "(0.741011549768139, 0.7499784180153567)",
+      "PR-AUC": 0.8612760337291162,
+      "PR-AUC 95% CI": "(0.8576999919958153, 0.8650372853574344)",
+      "Train Time (s)": 27.546
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.85051990304721,
+      "ROC-AUC 95% CI": "(0.8470571329213566, 0.8544644951133703)",
+      "PR-AUC": 0.9237996879149544,
+      "PR-AUC 95% CI": "(0.92111273187377, 0.9267786771170006)",
+      "Train Time (s)": 42.291
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7365999147848317,
+      "PR-AUC 95% CI": "(0.7289305496378355, 0.7447805709416276)",
+      "Train Time (s)": 0.0
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7365999147848317,
+      "PR-AUC 95% CI": "(0.7289305496378355, 0.7447805709416276)",
+      "Train Time (s)": 0.048
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7365999147848317,
+      "PR-AUC 95% CI": "(0.7289305496378355, 0.7447805709416276)",
+      "Train Time (s)": 0.302
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.5092435592817649,
+      "ROC-AUC 95% CI": "(0.4977324848434417, 0.520248348067158)",
+      "PR-AUC": 0.7458222796373335,
+      "PR-AUC 95% CI": "(0.73548855789753, 0.7559292081617068)",
+      "Train Time (s)": 1.325
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.7406182224191055,
+      "ROC-AUC 95% CI": "(0.7292730886511102, 0.7501730106624388)",
+      "PR-AUC": 0.8669836696025921,
+      "PR-AUC 95% CI": "(0.8580743162824386, 0.8752304085881152)",
+      "Train Time (s)": 37.479
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.6182599023511857,
+      "ROC-AUC 95% CI": "(0.6064352398927267, 0.6300598746324588)",
+      "PR-AUC": 0.8035181185833427,
+      "PR-AUC 95% CI": "(0.7931547939934938, 0.8134422523635846)",
+      "Train Time (s)": 13.053
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.6903061814157656,
+      "ROC-AUC 95% CI": "(0.67931352791987, 0.7019033097275019)",
+      "PR-AUC": 0.8465287249540527,
+      "PR-AUC 95% CI": "(0.8377843833237565, 0.8553405733067587)",
+      "Train Time (s)": 27.006
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.7511909679113474,
+      "ROC-AUC 95% CI": "(0.7410634654013518, 0.7600243929487678)",
+      "PR-AUC": 0.8754481363119574,
+      "PR-AUC 95% CI": "(0.8668243055843075, 0.8835540106111028)",
+      "Train Time (s)": 119.262
+    }
+  ],
+  "regimes": [
+    {
+      "Split": "random",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7193079489085158,
+      "PR-AUC 95% CI": "(0.7155733100575556, 0.7230421556596436)",
+      "Train Time (s)": 0.001
+    },
+    {
+      "Split": "random",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.8477034240578316,
+      "ROC-AUC 95% CI": "(0.8441858408616689, 0.8514640242778673)",
+      "PR-AUC": 0.9223770037220368,
+      "PR-AUC 95% CI": "(0.9196769022315943, 0.9251852427450883)",
+      "Train Time (s)": 0.062
+    },
+    {
+      "Split": "random",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.7995103601917131,
+      "ROC-AUC 95% CI": "(0.7956751013981112, 0.8031825687894002)",
+      "PR-AUC": 0.8708746457185413,
+      "PR-AUC 95% CI": "(0.8677707748934783, 0.8740929852138096)",
+      "Train Time (s)": 0.321
+    },
+    {
+      "Split": "random",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.5259250080282889,
+      "ROC-AUC 95% CI": "(0.5212545423683278, 0.5309496654915241)",
+      "PR-AUC": 0.7380793069305399,
+      "PR-AUC 95% CI": "(0.7334457314457323, 0.742910470302723)",
+      "Train Time (s)": 1.83
+    },
+    {
+      "Split": "random",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.9544576593427446,
+      "ROC-AUC 95% CI": "(0.952607286380889, 0.9562094447853514)",
+      "PR-AUC": 0.9802236625137376,
+      "PR-AUC 95% CI": "(0.9789900792527758, 0.9813833936632992)",
+      "Train Time (s)": 38.427
+    },
+    {
+      "Split": "random",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.8528100402083225,
+      "ROC-AUC 95% CI": "(0.849408935136506, 0.856340327595699)",
+      "PR-AUC": 0.928580301017128,
+      "PR-AUC 95% CI": "(0.926193114607914, 0.9309597518374073)",
+      "Train Time (s)": 13.858
+    },
+    {
+      "Split": "random",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.9841977373482392,
+      "ROC-AUC 95% CI": "(0.9833095688141305, 0.9849890314690468)",
+      "PR-AUC": 0.9933089045057152,
+      "PR-AUC 95% CI": "(0.9928272390921957, 0.9937536750946567)",
+      "Train Time (s)": 27.839
+    },
+    {
+      "Split": "random",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.964066455885366,
+      "ROC-AUC 95% CI": "(0.9625721749588656, 0.9654992862509797)",
+      "PR-AUC": 0.984957850967912,
+      "PR-AUC 95% CI": "(0.9841488803714352, 0.985782610010864)",
+      "Train Time (s)": 91.551
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7353314080439529,
+      "PR-AUC 95% CI": "(0.73156300626893, 0.7388369902091991)",
+      "Train Time (s)": 0.001
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.8418781424331439,
+      "ROC-AUC 95% CI": "(0.8380189822006056, 0.8453802639903167)",
+      "PR-AUC": 0.9264282848824852,
+      "PR-AUC 95% CI": "(0.9237902634744525, 0.9288076277808027)",
+      "Train Time (s)": 0.066
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7353314080439529,
+      "PR-AUC 95% CI": "(0.73156300626893, 0.7388369902091991)",
+      "Train Time (s)": 0.304
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.5282215467527516,
+      "ROC-AUC 95% CI": "(0.522946421833237, 0.5334308211108327)",
+      "PR-AUC": 0.7503703437644893,
+      "PR-AUC 95% CI": "(0.7455943427354524, 0.7550658616010569)",
+      "Train Time (s)": 1.849
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.8810760473720248,
+      "ROC-AUC 95% CI": "(0.8774153190843869, 0.8846377440331593)",
+      "PR-AUC": 0.9280170082361214,
+      "PR-AUC 95% CI": "(0.9247059318309349, 0.9314867462886783)",
+      "Train Time (s)": 37.915
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.8468646578994253,
+      "ROC-AUC 95% CI": "(0.8430649763858954, 0.8503522039826177)",
+      "PR-AUC": 0.9311775050352776,
+      "PR-AUC 95% CI": "(0.9288371607539394, 0.9333566141713326)",
+      "Train Time (s)": 13.918
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.9823516177887373,
+      "ROC-AUC 95% CI": "(0.9813305148721205, 0.9833792277051153)",
+      "PR-AUC": 0.992924454584344,
+      "PR-AUC 95% CI": "(0.992393436325003, 0.9934377036785892)",
+      "Train Time (s)": 27.998
+    },
+    {
+      "Split": "unseen_drugs",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.8991444900482732,
+      "ROC-AUC 95% CI": "(0.8960541545650827, 0.902041690385505)",
+      "PR-AUC": 0.9554895330073816,
+      "PR-AUC 95% CI": "(0.9536518838375302, 0.9571472638733639)",
+      "Train Time (s)": 50.671
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7205973344035853,
+      "PR-AUC 95% CI": "(0.7170341477282229, 0.7245288382748876)",
+      "Train Time (s)": 0.001
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7205973344035853,
+      "PR-AUC 95% CI": "(0.7170341477282229, 0.7245288382748876)",
+      "Train Time (s)": 0.061
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.7843989696390945,
+      "ROC-AUC 95% CI": "(0.780881688920588, 0.7883771963127819)",
+      "PR-AUC": 0.8627916721345983,
+      "PR-AUC 95% CI": "(0.8597576658693598, 0.8662604850435885)",
+      "Train Time (s)": 0.316
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.4791660116574537,
+      "ROC-AUC 95% CI": "(0.4739857553908536, 0.4841743208578492)",
+      "PR-AUC": 0.7111094388856294,
+      "PR-AUC 95% CI": "(0.7063676802884986, 0.7157942940419335)",
+      "Train Time (s)": 1.261
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.8659404565748906,
+      "ROC-AUC 95% CI": "(0.8624276989176164, 0.8696572947513157)",
+      "PR-AUC": 0.9272164904090384,
+      "PR-AUC 95% CI": "(0.924602603733817, 0.9301054155677867)",
+      "Train Time (s)": 38.629
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.6377032817793604,
+      "ROC-AUC 95% CI": "(0.6326392560809513, 0.6430680172576407)",
+      "PR-AUC": 0.7915611275703296,
+      "PR-AUC 95% CI": "(0.7870237906663531, 0.7963359437059361)",
+      "Train Time (s)": 13.26
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.7452621575909304,
+      "ROC-AUC 95% CI": "(0.741011549768139, 0.7499784180153567)",
+      "PR-AUC": 0.8612760337291162,
+      "PR-AUC 95% CI": "(0.8576999919958153, 0.8650372853574344)",
+      "Train Time (s)": 27.546
+    },
+    {
+      "Split": "unseen_proteins",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.85051990304721,
+      "ROC-AUC 95% CI": "(0.8470571329213566, 0.8544644951133703)",
+      "PR-AUC": 0.9237996879149544,
+      "PR-AUC 95% CI": "(0.92111273187377, 0.9267786771170006)",
+      "Train Time (s)": 42.291
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Dummy",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7365999147848317,
+      "PR-AUC 95% CI": "(0.7289305496378355, 0.7447805709416276)",
+      "Train Time (s)": 0.0
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Protein-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7365999147848317,
+      "PR-AUC 95% CI": "(0.7289305496378355, 0.7447805709416276)",
+      "Train Time (s)": 0.048
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Drug-Only",
+      "ROC-AUC": 0.5,
+      "ROC-AUC 95% CI": "(0.5, 0.5)",
+      "PR-AUC": 0.7365999147848317,
+      "PR-AUC 95% CI": "(0.7289305496378355, 0.7447805709416276)",
+      "Train Time (s)": 0.302
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Nearest-Protein",
+      "ROC-AUC": 0.5092435592817649,
+      "ROC-AUC 95% CI": "(0.4977324848434417, 0.520248348067158)",
+      "PR-AUC": 0.7458222796373335,
+      "PR-AUC 95% CI": "(0.73548855789753, 0.7559292081617068)",
+      "Train Time (s)": 1.325
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "RF drug-features-only",
+      "ROC-AUC": 0.7406182224191055,
+      "ROC-AUC 95% CI": "(0.7292730886511102, 0.7501730106624388)",
+      "PR-AUC": 0.8669836696025921,
+      "PR-AUC 95% CI": "(0.8580743162824386, 0.8752304085881152)",
+      "Train Time (s)": 37.479
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "RF protein-features-only",
+      "ROC-AUC": 0.6182599023511857,
+      "ROC-AUC 95% CI": "(0.6064352398927267, 0.6300598746324588)",
+      "PR-AUC": 0.8035181185833427,
+      "PR-AUC 95% CI": "(0.7931547939934938, 0.8134422523635846)",
+      "Train Time (s)": 13.053
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "Random Forest",
+      "ROC-AUC": 0.6903061814157656,
+      "ROC-AUC 95% CI": "(0.67931352791987, 0.7019033097275019)",
+      "PR-AUC": 0.8465287249540527,
+      "PR-AUC 95% CI": "(0.8377843833237565, 0.8553405733067587)",
+      "Train Time (s)": 27.006
+    },
+    {
+      "Split": "unseen_both",
+      "Model": "PyTorch MLP",
+      "ROC-AUC": 0.7511909679113474,
+      "ROC-AUC 95% CI": "(0.7410634654013518, 0.7600243929487678)",
+      "PR-AUC": 0.8754481363119574,
+      "PR-AUC 95% CI": "(0.8668243055843075, 0.8835540106111028)",
+      "Train Time (s)": 119.262
+    }
+  ],
+  "similarity_bins": {
+    "Split 2 (Unseen Drugs - Drug Tanimoto Sim)": [
+      {
+        "Bin": "<0.4",
+        "Test Pairs": 101,
+        "RF ROC-AUC": 0.862,
+        "MLP ROC-AUC": 0.8043
+      },
+      {
+        "Bin": "0.4\u20130.6",
+        "Test Pairs": 334,
+        "RF ROC-AUC": 0.914,
+        "MLP ROC-AUC": 0.8227
+      },
+      {
+        "Bin": "0.6\u20130.8",
+        "Test Pairs": 1780,
+        "RF ROC-AUC": 0.9805,
+        "MLP ROC-AUC": 0.9369
+      },
+      {
+        "Bin": ">0.8",
+        "Test Pairs": 2445,
+        "RF ROC-AUC": 0.9909,
+        "MLP ROC-AUC": 0.6843
+      }
+    ],
+    "Split 4 (Unseen Both - Drug Tanimoto Sim)": [
+      {
+        "Bin": "<0.4",
+        "Test Pairs": 701,
+        "RF ROC-AUC": 0.6388,
+        "MLP ROC-AUC": 0.7416
+      },
+      {
+        "Bin": "0.4\u20130.6",
+        "Test Pairs": 952,
+        "RF ROC-AUC": 0.7762,
+        "MLP ROC-AUC": 0.6225
+      },
+      {
+        "Bin": "0.6\u20130.8",
+        "Test Pairs": 1186,
+        "RF ROC-AUC": 0.6785,
+        "MLP ROC-AUC": 0.7848
+      },
+      {
+        "Bin": ">0.8",
+        "Test Pairs": 968,
+        "RF ROC-AUC": 0.686,
+        "MLP ROC-AUC": 0.6635
+      }
+    ],
+    "Split 3 (Unseen Proteins - Protein Cosine Sim)": [
+      {
+        "Bin": "<0.92",
+        "Test Pairs": 1180,
+        "RF ROC-AUC": 0.6367,
+        "MLP ROC-AUC": 0.7831
+      },
+      {
+        "Bin": "0.92\u20130.95",
+        "Test Pairs": 4833,
+        "RF ROC-AUC": 0.6351,
+        "MLP ROC-AUC": 0.7533
+      },
+      {
+        "Bin": "0.95\u20130.97",
+        "Test Pairs": 36035,
+        "RF ROC-AUC": 0.7272,
+        "MLP ROC-AUC": 0.8041
+      },
+      {
+        "Bin": ">0.97",
+        "Test Pairs": 17751,
+        "RF ROC-AUC": 0.8067,
+        "MLP ROC-AUC": 0.9211
+      }
+    ],
+    "Split 4 (Unseen Both - Protein Cosine Sim)": [
+      {
+        "Bin": "<0.92",
+        "Test Pairs": 258,
+        "RF ROC-AUC": 0.5322,
+        "MLP ROC-AUC": 0.8062
+      },
+      {
+        "Bin": "0.92\u20130.95",
+        "Test Pairs": 1045,
+        "RF ROC-AUC": 0.7144,
+        "MLP ROC-AUC": 0.7703
+      },
+      {
+        "Bin": "0.95\u20130.97",
+        "Test Pairs": 6850,
+        "RF ROC-AUC": 0.6686,
+        "MLP ROC-AUC": 0.7522
+      },
+      {
+        "Bin": ">0.97",
+        "Test Pairs": 3582,
+        "RF ROC-AUC": 0.686,
+        "MLP ROC-AUC": 0.7405
+      }
+    ]
+  },
+  "similarity": {
+    "Split 2 (Unseen Drugs - Drug Tanimoto Sim)": [
+      {
+        "Bin": "<0.4",
+        "Test Pairs": 101,
+        "RF ROC-AUC": 0.862,
+        "MLP ROC-AUC": 0.8043
+      },
+      {
+        "Bin": "0.4\u20130.6",
+        "Test Pairs": 334,
+        "RF ROC-AUC": 0.914,
+        "MLP ROC-AUC": 0.8227
+      },
+      {
+        "Bin": "0.6\u20130.8",
+        "Test Pairs": 1780,
+        "RF ROC-AUC": 0.9805,
+        "MLP ROC-AUC": 0.9369
+      },
+      {
+        "Bin": ">0.8",
+        "Test Pairs": 2445,
+        "RF ROC-AUC": 0.9909,
+        "MLP ROC-AUC": 0.6843
+      }
+    ],
+    "Split 4 (Unseen Both - Drug Tanimoto Sim)": [
+      {
+        "Bin": "<0.4",
+        "Test Pairs": 701,
+        "RF ROC-AUC": 0.6388,
+        "MLP ROC-AUC": 0.7416
+      },
+      {
+        "Bin": "0.4\u20130.6",
+        "Test Pairs": 952,
+        "RF ROC-AUC": 0.7762,
+        "MLP ROC-AUC": 0.6225
+      },
+      {
+        "Bin": "0.6\u20130.8",
+        "Test Pairs": 1186,
+        "RF ROC-AUC": 0.6785,
+        "MLP ROC-AUC": 0.7848
+      },
+      {
+        "Bin": ">0.8",
+        "Test Pairs": 968,
+        "RF ROC-AUC": 0.686,
+        "MLP ROC-AUC": 0.6635
+      }
+    ],
+    "Split 3 (Unseen Proteins - Protein Cosine Sim)": [
+      {
+        "Bin": "<0.92",
+        "Test Pairs": 1180,
+        "RF ROC-AUC": 0.6367,
+        "MLP ROC-AUC": 0.7831
+      },
+      {
+        "Bin": "0.92\u20130.95",
+        "Test Pairs": 4833,
+        "RF ROC-AUC": 0.6351,
+        "MLP ROC-AUC": 0.7533
+      },
+      {
+        "Bin": "0.95\u20130.97",
+        "Test Pairs": 36035,
+        "RF ROC-AUC": 0.7272,
+        "MLP ROC-AUC": 0.8041
+      },
+      {
+        "Bin": ">0.97",
+        "Test Pairs": 17751,
+        "RF ROC-AUC": 0.8067,
+        "MLP ROC-AUC": 0.9211
+      }
+    ],
+    "Split 4 (Unseen Both - Protein Cosine Sim)": [
+      {
+        "Bin": "<0.92",
+        "Test Pairs": 258,
+        "RF ROC-AUC": 0.5322,
+        "MLP ROC-AUC": 0.8062
+      },
+      {
+        "Bin": "0.92\u20130.95",
+        "Test Pairs": 1045,
+        "RF ROC-AUC": 0.7144,
+        "MLP ROC-AUC": 0.7703
+      },
+      {
+        "Bin": "0.95\u20130.97",
+        "Test Pairs": 6850,
+        "RF ROC-AUC": 0.6686,
+        "MLP ROC-AUC": 0.7522
+      },
+      {
+        "Bin": ">0.97",
+        "Test Pairs": 3582,
+        "RF ROC-AUC": 0.686,
+        "MLP ROC-AUC": 0.7405
+      }
+    ]
+  },
+  "seed_robustness": [
+    {
+      "Seed": 42,
+      "Train Pairs": 150000,
+      "ROC-AUC": 0.690306162702213,
+      "ROC-AUC 95% CI": "(0.679313874350324, 0.7019035955082055)",
+      "PR-AUC": 0.8465285060401235,
+      "PR-AUC 95% CI": "(0.8377840804200458, 0.8553404820010703)",
+      "Fit Time (s)": 27.21
+    },
+    {
+      "Seed": 1,
+      "Train Pairs": 150000,
+      "ROC-AUC": 0.7255357540386467,
+      "ROC-AUC 95% CI": "(0.7148265658739235, 0.7354895701905011)",
+      "PR-AUC": 0.8677030628606894,
+      "PR-AUC 95% CI": "(0.8595834959222791, 0.875785450575622)",
+      "Fit Time (s)": 27.93
+    },
+    {
+      "Seed": 2,
+      "Train Pairs": 150000,
+      "ROC-AUC": 0.7218467139974828,
+      "ROC-AUC 95% CI": "(0.7115866000533494, 0.7322024952915549)",
+      "PR-AUC": 0.8642372302148961,
+      "PR-AUC 95% CI": "(0.8562871732286164, 0.872045002443861)",
+      "Fit Time (s)": 27.06
+    }
+  ],
+  "split4_rf_seed_robustness": [
+    {
+      "Seed": 42,
+      "Train Pairs": 150000,
+      "ROC-AUC": 0.690306162702213,
+      "ROC-AUC 95% CI": "(0.679313874350324, 0.7019035955082055)",
+      "PR-AUC": 0.8465285060401235,
+      "PR-AUC 95% CI": "(0.8377840804200458, 0.8553404820010703)",
+      "Fit Time (s)": 27.21
+    },
+    {
+      "Seed": 1,
+      "Train Pairs": 150000,
+      "ROC-AUC": 0.7255357540386467,
+      "ROC-AUC 95% CI": "(0.7148265658739235, 0.7354895701905011)",
+      "PR-AUC": 0.8677030628606894,
+      "PR-AUC 95% CI": "(0.8595834959222791, 0.875785450575622)",
+      "Fit Time (s)": 27.93
+    },
+    {
+      "Seed": 2,
+      "Train Pairs": 150000,
+      "ROC-AUC": 0.7218467139974828,
+      "ROC-AUC 95% CI": "(0.7115866000533494, 0.7322024952915549)",
+      "PR-AUC": 0.8642372302148961,
+      "PR-AUC 95% CI": "(0.8562871732286164, 0.872045002443861)",
+      "Fit Time (s)": 27.06
+    }
+  ]
+}

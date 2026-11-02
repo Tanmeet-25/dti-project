@@ -38,3 +38,8 @@ results/preds/
 
 
 
+
+# Scratch scripts and temporary files
+scratch/
+
+!results/*.csv
